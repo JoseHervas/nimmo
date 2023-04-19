@@ -11,6 +11,10 @@ class TelegramClient:
     async def send_message(self, message):
         await Bot(self.bot_token).send_message(chat_id=self.chat_id, text=message)
 
+    async def send_file(self, path):
+        with open(path, "rb") as file:
+            await Bot(self.bot_token).send_photo(chat_id=self.chat_id, photo=file)
+
     def start_listening(self, chat_engine_handler):
 
         print('[+] Telegram bot listening to responses...')

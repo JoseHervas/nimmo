@@ -25,8 +25,9 @@ def main():
     # Get weather forecasts
     if (send_weather_forecasts.lower() == "true"):
         weather_rawdata = get_weather_forecasts()
-        chatbot_summary = chat.answer_question(f"Dame los buenos días y actúa como un hombre del tiempo que informa del parte metereológico. Haz un breve resumen de no más de 4 líneas. Aquí tienes los datos de las previsiones metereológicas: {weather_rawdata}")
+        chatbot_summary = chat.answer_question(f"Dame los buenos días y actúa como un hombre del tiempo que informa del parte metereológico. Haz un breve resumen de no más de 4 líneas. Expresa las temperaturas en grados celsius. Aquí tienes los datos de las previsiones metereológicas: {weather_rawdata}")
         asyncio.run(telegram.send_message(chatbot_summary))
+        asyncio.run(telegram.send_file("weather.png"))
     
     # Get latest papers
     if (send_papers_summary.lower() == "true"):
