@@ -68,9 +68,11 @@ class ChatEngine:
         tokens_count = 0
         messages = []
         for message in reversed(full_messages_history):
-            tokens_count += self.count_tokens_from_string(message["content"], "gpt2")
-            messages.insert(0, message)
-            if tokens_count >= 4096:
+            message_length = self.count_tokens_from_string(message["content"], "gpt2")
+            if (tokens_count + message_length < 4096):
+                tokens_count += message_length
+                messages.insert(0, message)
+            else:
                 break
         response = openai.ChatCompletion.create(model=chatgpt_engine, messages=messages)
         response_content = response.choices[0].message.content
