@@ -1,6 +1,10 @@
-import openai, tiktoken, sys, os
+from memory.messages import MessageStore
+import openai
+import tiktoken
+import sys
+import os
 sys.path.append('../')
-from messages import MessageStore
+
 
 class ChatEngine:
     api_key = None
@@ -28,9 +32,9 @@ class ChatEngine:
         )
 
         if response.choices[0].text:
-            return(response.choices[0].text)
+            return (response.choices[0].text)
         else:
-            return("No response was returned from OpenAI.")
+            return ("No response was returned from OpenAI.")
 
     def create_summary(self, papers):
         print("[+] Creating summary with ChatGPT")
@@ -39,25 +43,28 @@ class ChatEngine:
         store = MessageStore()
         messages = store.get_messages()
         for paper in papers:
-                print("\t[+] Running query number", papers.index(paper)+1, "of", len(papers))
-                text = f"Resume este artículo científico en 1 línea. Recuerda mencionar el título, el numero de citas y la venue donde se ha publicado : {paper}"
-                store.add_message({"role": "user", "content": text})
-                response = openai.ChatCompletion.create(
-                        model=chatgpt_engine, messages=[messages[0], {"role": "user", "content": text}])
-                response_content = response.choices[0].message.content
-                store.add_message({"role": "assistant", "content": response_content})
-            
+            print("\t[+] Running query number",
+                  papers.index(paper)+1, "of", len(papers))
+            text = f"Resume este artículo científico en 1 línea. Recuerda mencionar el título, el numero de citas y la venue donde se ha publicado : {paper}"
+            store.add_message({"role": "user", "content": text})
+            response = openai.ChatCompletion.create(
+                model=chatgpt_engine, messages=[messages[0], {"role": "user", "content": text}])
+            response_content = response.choices[0].message.content
+            store.add_message(
+                {"role": "assistant", "content": response_content})
+
         print("\t[!] Writing general summary of everything")
         query = "Resume las noticias científicas del dia: "
         for message in messages:
             if (message["role"] == "assistant"):
                 query += message["content"]
         store.add_message({"role": "user", "content": query})
-        response = openai.ChatCompletion.create(model=chatgpt_engine, messages=[messages[0], {"role": "user", "content": query}])
+        response = openai.ChatCompletion.create(model=chatgpt_engine, messages=[
+                                                messages[0], {"role": "user", "content": query}])
         response_content = response.choices[0].message.content
-        store.add_message({"role": "assistant", "content": response_content})  
-            
-        return(response_content)
+        store.add_message({"role": "assistant", "content": response_content})
+
+        return (response_content)
 
     def answer_question(self, text):
         store = MessageStore()
@@ -68,13 +75,15 @@ class ChatEngine:
         tokens_count = 0
         messages = []
         for message in reversed(full_messages_history):
-            message_length = self.count_tokens_from_string(message["content"], "gpt2")
+            message_length = self.count_tokens_from_string(
+                message["content"], "gpt2")
             if (tokens_count + message_length < 4096):
                 tokens_count += message_length
                 messages.insert(0, message)
             else:
                 break
-        response = openai.ChatCompletion.create(model=chatgpt_engine, messages=messages)
+        response = openai.ChatCompletion.create(
+            model=chatgpt_engine, messages=messages)
         response_content = response.choices[0].message.content
         store.add_message({"role": "assistant", "content": response_content})
-        return(response_content)
+        return (response_content)

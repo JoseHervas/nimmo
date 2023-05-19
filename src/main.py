@@ -46,6 +46,9 @@ def main():
         summary = chat.create_summary(latest_papers)
         asyncio.run(telegram.send_message(summary))
 
+    store = MessageStore()
+    print(store.get_relevant("noticias de salud"))
+
     telegram.start_listening(chat.answer_question)
 
 
