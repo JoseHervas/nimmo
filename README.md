@@ -1,4 +1,4 @@
-# Klaus
+# Nimmo
 
 This project is the continuation of [Luna](https://github.com/JoseHervas/luna), my first personal assistant chatbot.
 
