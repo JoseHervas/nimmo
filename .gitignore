@@ -3,5 +3,5 @@ venv
 *.log
 *.json
 .DS_Store
-*.png
 *.db
+*.gml

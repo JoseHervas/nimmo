@@ -1,9 +1,9 @@
 from modules.chat_engine import ChatEngine
 from modules.telegram_client import TelegramClient
-from modules.journal_scrapper import get_latest_papers
-from modules.weather import get_weather_forecasts
-from modules.news import NewsAPI
-from memory.messages import MessageStore
+# from modules.journal_scrapper import get_latest_papers
+# from modules.weather import get_weather_forecasts
+# from modules.news import NewsAPI
+# from memory.messages import MessageStore
 import asyncio
 import os
 from dotenv import load_dotenv
@@ -19,10 +19,10 @@ def main():
     send_news = os.getenv('SEND_NEWS_ON_BOOTUP')
 
     # Initialize the modules
-    MessageStore()
+    # MessageStore()
     chat = ChatEngine()
     telegram = TelegramClient()
-    news = NewsAPI()
+    # news = NewsAPI()
 
     # Get weather forecasts
     if (send_weather_forecasts.lower() == "true"):
@@ -46,8 +46,8 @@ def main():
         summary = chat.create_summary(latest_papers)
         asyncio.run(telegram.send_message(summary))
 
-    store = MessageStore()
-    print(store.get_relevant("noticias de salud"))
+    # store = MessageStore()
+    # print(store.get_relevant("noticias de salud"))
 
     telegram.start_listening(chat.answer_question)
 
