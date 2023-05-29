@@ -1,7 +1,6 @@
+from typing import Any, Optional
 import sqlite3
 from langchain.memory.entity import BaseEntityStore
-from typing import Any, Optional, Iterable
-from itertools import islice
 
 # while waiting for https://github.com/hwchase17/langchain/pull/5129 to be merged
 class EntitySqliteMemory(BaseEntityStore):
@@ -46,7 +45,7 @@ class EntitySqliteMemory(BaseEntityStore):
             FROM {self.full_table_name}
             WHERE key = ? AND expiration >= strftime('%s', 'now')
         """
-        cursor = self.conn.execute(query, (key,))
+        cursor = self.conn.execute(query, (key))
         result = cursor.fetchone()
         if result is not None:
             value = result[0]

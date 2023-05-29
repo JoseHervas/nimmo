@@ -2,9 +2,11 @@ import requests, os, datetime
 import matplotlib.pyplot as plt
 import numpy as np
 
-def get_weather_forecasts():
-    print("[+] Preparing weather data forecast...")
-    api_key=os.getenv('OPEN_WEATHER_TOKEN')
+def get_weather_forecasts(city):
+    api_key = os.getenv('OPEN_WEATHER_TOKEN')
+    if (api_key is None):
+        raise Exception("OPEN_WEATHER_TOKEN not found in environment variables")
+    print(f"[+] Preparing weather data forecast for {city}...")
     lat=os.getenv('LATITUDE')
     lon=os.getenv('LONGITUDE')
     url = f'https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={api_key}'

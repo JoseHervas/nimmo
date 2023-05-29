@@ -1,0 +1,14 @@
+[MAIN]
+suggestion-mode=yes
+py-version = 3.9.6
+
+[MESSAGES CONTROL]
+disable=
+    missing-docstring,
+    superfluous-parens,
+    line-too-long,
+    keyword-arg-before-vararg,
+    broad-exception-raised,
+    multiple-imports,
+    too-few-public-methods,
+    wrong-import-position,
