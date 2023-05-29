@@ -3,7 +3,7 @@ from langchain.agents import load_tools, initialize_agent
 from langchain.llms import OpenAI
 from langchain.memory import ConversationKGMemory, ConversationSummaryBufferMemory, CombinedMemory
 from langchain.memory.chat_message_histories import SQLChatMessageHistory
-from .tools import search_news, weather_forecast, write_file
+from .tools import search_news, weather_forecast, generate_write_tool
 
 class LanguageEngine:
 
@@ -18,7 +18,7 @@ class LanguageEngine:
     def setup_agent(self):
         llm = OpenAI(temperature=self.temperature)
         tools = load_tools(self.tools)
-        tools = tools + [search_news, weather_forecast, write_file]
+        tools = tools + [search_news, weather_forecast, generate_write_tool(self)]
         db_store = SQLChatMessageHistory(connection_string='sqlite:///messages.db', session_id='chatbot')
         conversation_memory = ConversationSummaryBufferMemory(llm=llm, memory_key="chat_history", input_key="input", chat_memory=db_store)
         self.kg_memory = ConversationKGMemory(llm=llm, input_key="input")
@@ -26,6 +26,9 @@ class LanguageEngine:
         # entity_memory = ConversationEntityMemory(llm=OpenAI(), input_key="input", entity_store=EntitySqliteMemory(session_id="chatbot"))
         self.memory = CombinedMemory(memories=[conversation_memory, self.kg_memory])
         self.agent = initialize_agent(tools, llm, agent="conversational-react-description", memory=self.memory, verbose=False)
+
+    def remember(self, text):
+        self.kg_memory.save_context({"input": text}, {"output": "okay"})
 
     def answer_question(self, text):
         response = self.agent.run(text)
