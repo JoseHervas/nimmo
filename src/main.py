@@ -1,8 +1,6 @@
-import asyncio
-import os
 from dotenv import load_dotenv
 from modules.language import LanguageEngine
-from modules.telegram_client import TelegramClient
+from modules.ui import TelegramClient
 # from modules.scientific_journals import get_latest_papers
 
 def main():
@@ -35,9 +33,6 @@ def main():
     #     latest_papers = get_latest_papers("Nature")
     #     summary = chat.create_summary(latest_papers)
     #     asyncio.run(telegram.send_message(summary))
-
-    # store = MessageStore()
-    # print(store.get_relevant("noticias de salud"))
 
     telegram.start_listening(chat.answer_question)
 

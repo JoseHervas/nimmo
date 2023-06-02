@@ -1,6 +1,6 @@
+import asyncio, os
 from telegram import Bot, Update
 from telegram.ext import Application, ContextTypes, MessageHandler, filters
-import asyncio, os
 
 class TelegramClient:
 
