@@ -7,3 +7,4 @@ venv
 *.gml
 weather.png
 tmp
+__pycache__
